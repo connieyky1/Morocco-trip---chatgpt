@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Luxury Itinerary</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<script src="trip-data.js" defer></script>
+<script src="app.js" defer></script>
+</head>
+
+<body>
+
+<header>
+  <img id="app-logo" class="logo">
+  <h1 id="country-name"></h1>
+  <p id="trip-dates" class="subtitle"></p>
+</header>
+
+<nav id="nav"></nav>
+
+<main id="app"></main>
+
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js');
+}
+</script>
+
+</body>
+</html>
+
+body {
+  margin: 0;
+  background: #f6f1eb;
+  font-family: Georgia, serif;
+  color: #2b2b2b;
+}
+
+header {
+  text-align: center;
+  padding: 22px 16px 10px;
+}
+
+.logo {
+  width: 44px;
+}
+
+h1 {
+  font-size: 22px;
+  font-weight: normal;
+  margin: 6px 0;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #777;
+}
+
+nav {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+}
+
+nav button {
+  background: none;
+  border: none;
+  font-size: 13px;
+  color: #7a4a2e;
+}
+
+main {
+  padding: 18px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 18px;
+  padding: 16px;
+  margin-bottom: 18px;
+}
+
+.card img {
+  width: 100%;
+  border-radius: 14px;
+  margin-bottom: 12px;
+}
+
+h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 15px;
+  margin: 10px 0 6px;
+}
+
+p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.gallery {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+}
+
+.gallery img {
+  width: 180px;
+  height: 120px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background: #7a4a2e;
+  color: #fff;
+  border-radius: 20px;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+const trip = {
+  country: "Morocco",
+  dates: "Jan 17–24",
+  logo: "images/flag-morocco.png",
+
+  overview: `
+    This journey blends Morocco’s imperial cities with the vast stillness of the Sahara,
+    designed for cultural depth, comfort, and unhurried discovery.
+  `,
+
+  cities: [
+    {
+      id: "marrakech",
+      name: "Marrakech",
+      hotel: "Riad La Lumière d’Étoile",
+      places: [
+        {
+          name: "Jemaa el-Fna",
+          description: "The historic heart of Marrakech, animated by storytellers and musicians.",
+          images: [
+            "images/marrakech/jamaa1.jpg",
+            "images/marrakech/jamaa2.jpg"
+          ],
+          map: "https://maps.google.com/?q=Jemaa+el+Fna"
+        }
+      ]
+    },
+    {
+      id: "fes",
+      name: "Fes",
+      hotel: "Riad Fes Maya Suite & Spa",
+      places: [
+        {
+          name: "Fes el-Bali",
+          description: "A living medieval city of madrasas, souks, and ancient craftsmanship.",
+          images: [
+            "images/fes/fes1.jpg",
+            "images/fes/fes2.jpg"
+          ],
+          map: "https://maps.google.com/?q=Fes+el+Bali"
+        }
+      ]
+    }
+  ],
+
+  desertItinerary: [
+    {
+      day: "Day 1",
+      title: "Marrakech → Dades Valley",
+      description: "Cross the High Atlas via Tizi n’Tichka, visit Ait Ben Haddou and Ouarzazate.",
+      image: "images/desert/dades.jpg"
+    },
+    {
+      day: "Day 2",
+      title: "Dades → Merzouga",
+      description: "Journey through Todra Gorge, camel trek into the Sahara.",
+      image: "images/desert/merzouga.jpg"
+    },
+    {
+      day: "Day 3",
+      title: "Merzouga → Fes",
+      description: "Sunrise over dunes, travel north through cedar forests.",
+      image: "images/desert/cedar.jpg"
+    }
+  ]
+};
+
+const app = document.getElementById("app");
+const nav = document.getElementById("nav");
+
+document.getElementById("country-name").textContent = trip.country;
+document.getElementById("trip-dates").textContent = trip.dates;
+document.getElementById("app-logo").src = trip.logo;
+
+nav.innerHTML = `
+  <button onclick="home()">Overview</button>
+  ${trip.cities.map(c => `<button onclick="city('${c.id}')">${c.name}</button>`).join("")}
+  <button onclick="desert()">Desert</button>
+`;
+
+function home() {
+  app.innerHTML = `<div class="card"><h2>Journey Overview</h2><p>${trip.overview}</p></div>`;
+}
+
+function city(id) {
+  const c = trip.cities.find(x => x.id === id);
+  app.innerHTML = `
+    <div class="card">
+      <h2>${c.name}</h2>
+      <p><em>${c.hotel}</em></p>
+    </div>
+    ${c.places.map(p => `
+      <div class="card">
+        <img src="${p.images[0]}">
+        <h3>${p.name}</h3>
+        <p>${p.description}</p>
+        <div class="gallery">
+          ${p.images.map(i => `<img src="${i}">`).join("")}
+        </div>
+        <a class="btn" href="${p.map}" target="_blank">Navigate</a>
+      </div>
+    `).join("")}
+  `;
+}
+
+function desert() {
+  app.innerHTML = `
+    ${trip.desertItinerary.map(d => `
+      <div class="card">
+        <h3>${d.day} · ${d.title}</h3>
+        <p>${d.description}</p>
+        <img src="${d.image}">
+      </div>
+    `).join("")}
+  `;
+}
+
+home();
+
+{
+  "name": "Luxury Itinerary",
+  "short_name": "Itinerary",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f6f1eb",
+  "theme_color": "#7a4a2e",
+  "icons": [
+    {
+      "src": "images/flag-morocco.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
+
+self.addEventListener("fetch", () => {});
+
+
