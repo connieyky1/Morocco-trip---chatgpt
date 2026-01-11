@@ -2,55 +2,40 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Luxury Itinerary</title>
+<title>Morocco Luxury Journey</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="manifest.json">
-<link rel="stylesheet" href="style.css">
-<script src="trip-data.js" defer></script>
-<script src="app.js" defer></script>
-</head>
 
-<body>
+<!-- PWA -->
+<link rel="manifest" href="data:application/json,{
+  &quot;name&quot;:&quot;Morocco Journey&quot;,
+  &quot;short_name&quot;:&quot;Morocco&quot;,
+  &quot;display&quot;:&quot;standalone&quot;,
+  &quot;background_color&quot;:&quot;#f6f1eb&quot;,
+  &quot;theme_color&quot;:&quot;#7a4a2e&quot;
+}">
+<meta name="theme-color" content="#7a4a2e">
 
-<header>
-  <img id="app-logo" class="logo">
-  <h1 id="country-name"></h1>
-  <p id="trip-dates" class="subtitle"></p>
-</header>
-
-<nav id="nav"></nav>
-
-<main id="app"></main>
-
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js');
-}
-</script>
-
-</body>
-</html>
-
+<style>
 body {
   margin: 0;
-  background: #f6f1eb;
   font-family: Georgia, serif;
+  background: #f6f1eb;
   color: #2b2b2b;
 }
 
 header {
   text-align: center;
-  padding: 22px 16px 10px;
+  padding: 22px 16px 12px;
 }
 
-.logo {
+header img {
   width: 44px;
 }
 
 h1 {
   font-size: 22px;
-  font-weight: normal;
   margin: 6px 0;
+  font-weight: normal;
 }
 
 .subtitle {
@@ -61,9 +46,9 @@ h1 {
 nav {
   display: flex;
   justify-content: space-around;
-  padding: 10px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
+  padding: 10px 0;
 }
 
 nav button {
@@ -88,6 +73,7 @@ main {
   width: 100%;
   border-radius: 14px;
   margin-bottom: 12px;
+  object-fit: cover;
 }
 
 h2 {
@@ -97,7 +83,7 @@ h2 {
 
 h3 {
   font-size: 15px;
-  margin: 10px 0 6px;
+  margin: 8px 0 6px;
 }
 
 p {
@@ -123,147 +109,90 @@ p {
   margin-top: 10px;
   padding: 8px 14px;
   background: #7a4a2e;
-  color: #fff;
+  color: white;
   border-radius: 20px;
   font-size: 13px;
   text-decoration: none;
 }
+</style>
+</head>
 
-const trip = {
-  country: "Morocco",
-  dates: "Jan 17–24",
-  logo: "images/flag-morocco.png",
+<body>
 
-  overview: `
-    This journey blends Morocco’s imperial cities with the vast stillness of the Sahara,
-    designed for cultural depth, comfort, and unhurried discovery.
-  `,
+<header>
+  <img src="images/flag-morocco.png" alt="Morocco Flag">
+  <h1>Morocco</h1>
+  <p class="subtitle">Private Journey · Jan 17–24</p>
+</header>
 
-  cities: [
-    {
-      id: "marrakech",
-      name: "Marrakech",
-      hotel: "Riad La Lumière d’Étoile",
-      places: [
-        {
-          name: "Jemaa el-Fna",
-          description: "The historic heart of Marrakech, animated by storytellers and musicians.",
-          images: [
-            "images/marrakech/jamaa1.jpg",
-            "images/marrakech/jamaa2.jpg"
-          ],
-          map: "https://maps.google.com/?q=Jemaa+el+Fna"
-        }
-      ]
-    },
-    {
-      id: "fes",
-      name: "Fes",
-      hotel: "Riad Fes Maya Suite & Spa",
-      places: [
-        {
-          name: "Fes el-Bali",
-          description: "A living medieval city of madrasas, souks, and ancient craftsmanship.",
-          images: [
-            "images/fes/fes1.jpg",
-            "images/fes/fes2.jpg"
-          ],
-          map: "https://maps.google.com/?q=Fes+el+Bali"
-        }
-      ]
-    }
-  ],
+<nav>
+  <button onclick="show('home')">Overview</button>
+  <button onclick="show('marrakech')">Marrakech</button>
+  <button onclick="show('desert')">Desert</button>
+  <button onclick="show('fes')">Fes</button>
+  <button onclick="show('map')">Map</button>
+</nav>
 
-  desertItinerary: [
-    {
-      day: "Day 1",
-      title: "Marrakech → Dades Valley",
-      description: "Cross the High Atlas via Tizi n’Tichka, visit Ait Ben Haddou and Ouarzazate.",
-      image: "images/desert/dades.jpg"
-    },
-    {
-      day: "Day 2",
-      title: "Dades → Merzouga",
-      description: "Journey through Todra Gorge, camel trek into the Sahara.",
-      image: "images/desert/merzouga.jpg"
-    },
-    {
-      day: "Day 3",
-      title: "Merzouga → Fes",
-      description: "Sunrise over dunes, travel north through cedar forests.",
-      image: "images/desert/cedar.jpg"
-    }
-  ]
-};
+<main id="app"></main>
 
+<script>
 const app = document.getElementById("app");
-const nav = document.getElementById("nav");
 
-document.getElementById("country-name").textContent = trip.country;
-document.getElementById("trip-dates").textContent = trip.dates;
-document.getElementById("app-logo").src = trip.logo;
-
-nav.innerHTML = `
-  <button onclick="home()">Overview</button>
-  ${trip.cities.map(c => `<button onclick="city('${c.id}')">${c.name}</button>`).join("")}
-  <button onclick="desert()">Desert</button>
-`;
-
-function home() {
-  app.innerHTML = `<div class="card"><h2>Journey Overview</h2><p>${trip.overview}</p></div>`;
+function show(section) {
+  if (section === "home") home();
+  if (section === "marrakech") marrakech();
+  if (section === "desert") desert();
+  if (section === "fes") fes();
+  if (section === "map") map();
 }
 
-function city(id) {
-  const c = trip.cities.find(x => x.id === id);
+function home() {
   app.innerHTML = `
     <div class="card">
-      <h2>${c.name}</h2>
-      <p><em>${c.hotel}</em></p>
+      <h2>Journey Overview</h2>
+      <p>
+        This curated Moroccan journey blends imperial cities, ancient medinas,
+        and the vast stillness of the Sahara. Designed as a slow, elegant experience,
+        the itinerary balances cultural depth, refined comfort, and seamless pacing.
+      </p>
     </div>
-    ${c.places.map(p => `
-      <div class="card">
-        <img src="${p.images[0]}">
-        <h3>${p.name}</h3>
-        <p>${p.description}</p>
-        <div class="gallery">
-          ${p.images.map(i => `<img src="${i}">`).join("")}
-        </div>
-        <a class="btn" href="${p.map}" target="_blank">Navigate</a>
+  `;
+}
+
+function marrakech() {
+  app.innerHTML = `
+    <div class="card">
+      <h2>Marrakech</h2>
+      <p><em>Riad La Lumière d’Étoile · Mouassine</em></p>
+    </div>
+
+    <div class="card">
+      <img src="images/marrakech/jamaa1.jpg">
+      <h3>Jemaa el-Fna</h3>
+      <p>The historic heart of Marrakech, animated by storytellers, musicians, and food stalls.</p>
+      <div class="gallery">
+        <img src="images/marrakech/jamaa1.jpg">
+        <img src="images/marrakech/jamaa2.jpg">
       </div>
-    `).join("")}
+      <a class="btn" href="https://maps.google.com/?q=Jemaa+el+Fna" target="_blank">Navigate</a>
+    </div>
+
+    <div class="card">
+      <img src="images/marrakech/bahia.jpg">
+      <h3>Bahia Palace</h3>
+      <p>A masterpiece of 19th-century Moroccan architecture with tranquil courtyards.</p>
+      <a class="btn" href="https://maps.google.com/?q=Bahia+Palace" target="_blank">Navigate</a>
+    </div>
   `;
 }
 
 function desert() {
   app.innerHTML = `
-    ${trip.desertItinerary.map(d => `
-      <div class="card">
-        <h3>${d.day} · ${d.title}</h3>
-        <p>${d.description}</p>
-        <img src="${d.image}">
-      </div>
-    `).join("")}
-  `;
-}
+    <div class="card">
+      <h2>Desert Journey</h2>
+    </div>
 
-home();
-
-{
-  "name": "Luxury Itinerary",
-  "short_name": "Itinerary",
-  "start_url": ".",
-  "display": "standalone",
-  "background_color": "#f6f1eb",
-  "theme_color": "#7a4a2e",
-  "icons": [
-    {
-      "src": "images/flag-morocco.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-  ]
-}
-
-self.addEventListener("fetch", () => {});
-
-
+    <div class="card">
+      <h3>Day 1 · Marrakech → Dades Valley</h3>
+      <p>Cross the High Atlas Mountains via Tizi n’Tichka, visit Ait Ben Haddou and Ouarzazate.</p>
+      <img src="images/desert/dades.jp
