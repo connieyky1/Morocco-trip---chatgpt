@@ -4,15 +4,6 @@
 <meta charset="UTF-8">
 <title>Morocco Luxury Journey</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<!-- PWA -->
-<link rel="manifest" href="data:application/json,{
-  &quot;name&quot;:&quot;Morocco Journey&quot;,
-  &quot;short_name&quot;:&quot;Morocco&quot;,
-  &quot;display&quot;:&quot;standalone&quot;,
-  &quot;background_color&quot;:&quot;#f6f1eb&quot;,
-  &quot;theme_color&quot;:&quot;#7a4a2e&quot;
-}">
 <meta name="theme-color" content="#7a4a2e">
 
 <style>
@@ -83,7 +74,7 @@ h2 {
 
 h3 {
   font-size: 15px;
-  margin: 8px 0 6px;
+  margin: 10px 0 6px;
 }
 
 p {
@@ -130,7 +121,6 @@ p {
   <button onclick="show('marrakech')">Marrakech</button>
   <button onclick="show('desert')">Desert</button>
   <button onclick="show('fes')">Fes</button>
-  <button onclick="show('map')">Map</button>
 </nav>
 
 <main id="app"></main>
@@ -143,56 +133,155 @@ function show(section) {
   if (section === "marrakech") marrakech();
   if (section === "desert") desert();
   if (section === "fes") fes();
-  if (section === "map") map();
 }
 
+/* OVERVIEW */
 function home() {
   app.innerHTML = `
     <div class="card">
       <h2>Journey Overview</h2>
       <p>
-        This curated Moroccan journey blends imperial cities, ancient medinas,
-        and the vast stillness of the Sahara. Designed as a slow, elegant experience,
-        the itinerary balances cultural depth, refined comfort, and seamless pacing.
+        This thoughtfully designed Moroccan journey blends imperial cities, ancient medinas,
+        and the expansive silence of the Sahara. The itinerary prioritizes cultural depth,
+        graceful pacing, and refined comfort, creating an experience that feels immersive
+        yet unhurried.
+      </p>
+      <p>
+        From the atmospheric souks of Marrakech to the scholarly lanes of Fes,
+        with a profound interlude among desert landscapes, this journey reflects
+        Morocco’s layered history and enduring traditions.
       </p>
     </div>
   `;
 }
 
+/* MARRAKECH */
 function marrakech() {
   app.innerHTML = `
     <div class="card">
       <h2>Marrakech</h2>
       <p><em>Riad La Lumière d’Étoile · Mouassine</em></p>
+      <p>
+        Marrakech is a city of contrasts — refined riads hidden behind medina walls,
+        historic palaces, tranquil gardens, and the theatrical energy of Jemaa el-Fna.
+      </p>
     </div>
 
-    <div class="card">
-      <img src="images/marrakech/jamaa1.jpg">
-      <h3>Jemaa el-Fna</h3>
-      <p>The historic heart of Marrakech, animated by storytellers, musicians, and food stalls.</p>
-      <div class="gallery">
-        <img src="images/marrakech/jamaa1.jpg">
-        <img src="images/marrakech/jamaa2.jpg">
-      </div>
-      <a class="btn" href="https://maps.google.com/?q=Jemaa+el+Fna" target="_blank">Navigate</a>
-    </div>
+    ${place("Jemaa el-Fna",
+      "images/marrakech/jamaa1.jpg",
+      "The symbolic heart of Marrakech, where storytellers, musicians, and food stalls gather from late afternoon into the night, continuing centuries-old traditions of public performance.",
+      "Jemaa+el+Fna")}
 
-    <div class="card">
-      <img src="images/marrakech/bahia.jpg">
-      <h3>Bahia Palace</h3>
-      <p>A masterpiece of 19th-century Moroccan architecture with tranquil courtyards.</p>
-      <a class="btn" href="https://maps.google.com/?q=Bahia+Palace" target="_blank">Navigate</a>
-    </div>
+    ${place("Bahia Palace",
+      "images/marrakech/bahia.jpg",
+      "A 19th-century palace designed to showcase the finest Moroccan craftsmanship, with intricate zellij tilework, carved cedar ceilings, and peaceful interior courtyards.",
+      "Bahia+Palace")}
+
+    ${place("Saadian Tombs",
+      "images/marrakech/saadian.jpg",
+      "Dating back to the Saadian dynasty, these tombs reveal ornate marble columns and delicate decoration preserved for centuries behind garden walls.",
+      "Saadian+Tombs")}
+
+    ${place("Ben Youssef Madrasa",
+      "images/marrakech/benyoussef.jpg",
+      "Once one of North Africa’s largest Islamic colleges, this madrasa is admired for its harmonious proportions, calligraphy, and serene courtyard.",
+      "Ben+Youssef+Madrasa")}
+
+    ${place("Majorelle Garden",
+      "images/marrakech/majorelle.jpg",
+      "A botanical oasis created by Jacques Majorelle and later restored by Yves Saint Laurent, offering vivid blue architecture and exotic plant collections.",
+      "Majorelle+Garden")}
   `;
 }
 
+/* DESERT */
 function desert() {
   app.innerHTML = `
     <div class="card">
       <h2>Desert Journey</h2>
+      <p>
+        The desert crossing reveals Morocco’s dramatic geography, moving from mountain passes
+        and fortified villages to palm-lined valleys and vast sand dunes.
+      </p>
     </div>
 
+    ${day("Day 1 · Marrakech → Dades Valley",
+      "Depart Marrakech in the morning, crossing the High Atlas Mountains via the Tizi n’Tichka Pass. Visit the UNESCO-listed ksar of Ait Ben Haddou before continuing through Ouarzazate and the Valley of Roses. Overnight in the Dades Valley.",
+      "images/desert/dades.jpg")}
+
+    ${day("Day 2 · Dades → Merzouga",
+      "Travel through Todra Gorge and desert towns toward Merzouga. In the afternoon, mount camels for a journey into the dunes, arriving at a desert camp as the sun sets over the Sahara.",
+      "images/desert/merzouga.jpg")}
+
+    ${day("Day 3 · Merzouga → Fes",
+      "After sunrise in the dunes, depart northward through Midelt and cedar forests inhabited by Barbary macaques, arriving in Fes by evening.",
+      "images/desert/cedar.jpg")}
+  `;
+}
+
+/* FES */
+function fes() {
+  app.innerHTML = `
     <div class="card">
-      <h3>Day 1 · Marrakech → Dades Valley</h3>
-      <p>Cross the High Atlas Mountains via Tizi n’Tichka, visit Ait Ben Haddou and Ouarzazate.</p>
-      <img src="images/desert/dades.jp
+      <h2>Fes</h2>
+      <p><em>Riad Fes Maya Suite & Spa</em></p>
+      <p>
+        Fes is Morocco’s spiritual and intellectual heart, home to one of the world’s oldest
+        universities and a remarkably preserved medieval medina.
+      </p>
+    </div>
+
+    ${place("Bab Boujloud",
+      "images/fes/bab.jpg",
+      "The iconic blue gate marking the entrance to Fes el-Bali, symbolizing the transition from modern city to ancient medina.",
+      "Bab+Boujloud")}
+
+    ${place("Bou Inania Madrasa",
+      "images/fes/bouinania.jpg",
+      "An active religious school known for its carved plasterwork, tiled courtyards, and historic water clock.",
+      "Bou+Inania+Madrasa")}
+
+    ${place("Al-Qarawiyyin (Exterior)",
+      "images/fes/qarawiyyin.jpg",
+      "Founded in the 9th century, this university complex represents the spiritual and scholarly legacy of Fes.",
+      "Al+Qarawiyyin")}
+
+    ${place("Chouara Tannery",
+      "images/fes/tannery.jpg",
+      "One of the oldest working tanneries in the world, where leather is still processed using traditional methods.",
+      "Chouara+Tannery")}
+
+    ${place("Merenid Tombs",
+      "images/fes/tombs.jpg",
+      "Hilltop ruins offering sweeping views over the medina, particularly atmospheric at sunset.",
+      "Merenid+Tombs")}
+  `;
+}
+
+/* HELPERS */
+function place(name, img, desc, map) {
+  return `
+    <div class="card">
+      <img src="${img}">
+      <h3>${name}</h3>
+      <p>${desc}</p>
+      <a class="btn" href="https://maps.google.com/?q=${map}" target="_blank">Navigate</a>
+    </div>
+  `;
+}
+
+function day(title, desc, img) {
+  return `
+    <div class="card">
+      <h3>${title}</h3>
+      <p>${desc}</p>
+      <img src="${img}">
+    </div>
+  `;
+}
+
+home();
+</script>
+
+</body>
+</html>
